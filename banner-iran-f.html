@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://i.postimg.cc/W3khzYwz/tails-prower-480px.png" type="image/x-icon">
+    <title>بنر یوتیوب | گالری فاکسی</title>
+
+    <style>
+        /* تعریف فونت جدید IBM Plex Sans Arabic Bold برای صفحه بنر */
+        @font-face {
+            font-family: 'IBM Plex Sans Arabic';
+            src: url('fonts/IBMPlexSansArabic-Bold.ttf') format('truetype');
+            font-weight: bold;
+            font-style: normal;
+        }
+
+        body {
+            font-family: 'IBM Plex Sans Arabic', sans-serif;
+            background-color: #050505; 
+            color: #eee; 
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        #neon-particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none; 
+            z-index: -1; 
+            will-change: transform;
+        }
+
+        .neon-text-box {
+            display: inline-block;
+            padding: 10px 20px;
+            background: rgba(15, 15, 15, 0.75); 
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 20, 147, 0.4); 
+            box-shadow: 0 0 15px rgba(255, 20, 147, 0.25), inset 0 2px 5px rgba(255, 255, 255, 0.1), inset 0 -2px 5px rgba(255, 20, 147, 0.2);
+            color: #ffffff;
+            font-size: clamp(0.9rem, 4vw, 1.2rem); 
+            box-sizing: border-box;
+            max-width: 90%;
+            text-shadow: 0 2px 4px rgba(255, 20, 147, 0.3);
+        }
+
+        /* ==========================================================================
+           تنظیمات نوار ناوبری (منو چپ، لوگو راست)
+           ========================================================================== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(13, 13, 13, 0.85); 
+            backdrop-filter: blur(10px); 
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 20, 147, 0.3); 
+            box-shadow: 0 4px 20px rgba(255, 20, 147, 0.15); 
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 50px;
+            box-sizing: border-box;
+            z-index: 1000; 
+        }
+
+        .navbar .logo {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #ff1493; 
+            text-shadow: 0 0 10px rgba(255, 20, 147, 0.6);
+        }
+
+        .navbar ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: row-reverse; 
+        }
+
+        .navbar ul li {
+            margin-left: 20px;
+        }
+
+        .navbar ul li a {
+            text-decoration: none;
+            color: #eee;
+            font-weight: bold;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            padding: 5px 12px;
+            border-radius: 10px;
+            display: inline-block; /* فیکس باگ glint: overflow:hidden نیاز به block-level داره */
+        }
+
+        .navbar ul li a:hover {
+            color: #fff;
+            background: rgba(255, 20, 147, 0.25); 
+            box-shadow: 0 0 10px rgba(255, 20, 147, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.2);
+        }
+
+        .header-section {
+            min-height: 55vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-image: url('https://i.postimg.cc/mr9F4W7Z/Gemini-Generated-Image-ii3yqwii3yqwii3y.png');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 100px 20px 40px 20px; 
+            box-sizing: border-box;
+            position: relative;
+            z-index: 2;
+            -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%);
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%);
+        }
+
+        .header-section h1 {
+            font-size: clamp(1.5rem, 5vw, 2.6rem);
+            margin-bottom: 15px;
+            text-shadow: 0 4px 12px rgba(0,0,0,0.8);
+        }
+
+        .header-section p {
+            font-size: clamp(1rem, 3.5vw, 1.3rem);
+            margin: 10px 0 0 0;
+        }
+
+        .download-section {
+            padding: 20px 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: transparent; 
+            position: relative;
+            z-index: 2;
+        }
+
+        .download-section h2 {
+            margin-bottom: 30px;
+            font-size: clamp(1.3rem, 4vw, 1.8rem);
+            text-align: center;
+        }
+
+        .main-content-wrapper {
+            display: flex;
+            flex-direction: row-reverse; 
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+            width: 100%;
+            max-width: 1000px; 
+            flex-wrap: wrap;
+        }
+
+        .download-container, .category-container {
+            width: 100%;
+            max-width: 450px; 
+            height: auto;
+            min-height: 420px; 
+            border-radius: 25px; 
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), inset 0 6px 12px rgba(255, 255, 255, 0.08), inset 0 -6px 15px rgba(255, 20, 147, 0.15);
+            background: rgba(20, 5, 15, 0.45); 
+            backdrop-filter: blur(15px); 
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 20, 147, 0.3); 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 20px;
+            box-sizing: border-box;
+            flex: 1;
+            min-width: 290px;
+        }
+
+        .box-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .image-box {
+            position: relative;
+            width: 100%;
+            max-width: 380px;
+            aspect-ratio: 16 / 9; 
+            border-radius: 18px; 
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(255, 20, 147, 0.15), inset 0 2px 5px rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px; 
+            transition: all 0.4s ease;
+            z-index: 2;
+        }
+
+        .preview-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: filter 0.4s ease, transform 0.4s ease;
+        }
+
+        .image-details {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -40%); 
+            opacity: 0;
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-align: center;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            z-index: 3;
+            width: 85%;
+            box-sizing: border-box;
+            pointer-events: none;
+        }
+
+        /* افکت گلاینت کامل و بدون باگ */
+        .glint-effect {
+            position: relative;
+            overflow: hidden; 
+        }
+        
+        .glint-effect::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -150%;
+            width: 80%; 
+            height: 100%;
+            background: linear-gradient(
+                to right, 
+                rgba(255, 255, 255, 0) 0%, 
+                rgba(255, 255, 255, 0.03) 20%, 
+                rgba(255, 255, 255, 0.25) 50%, 
+                rgba(255, 255, 255, 0.03) 80%, 
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: skewX(-30deg); 
+            z-index: 10;
+            pointer-events: none;
+            opacity: 0;
+            filter: blur(12px); 
+            transition: opacity 0.5s ease; 
+        }
+
+        .glint-effect:hover::after {
+            opacity: 1;
+            animation: glintSlowSweep 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        @keyframes glintSlowSweep {
+            0% { left: -150%; }
+            100% { left: 150%; }
+        }
+
+        .download-btn {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.05); 
+            backdrop-filter: blur(8px); 
+            -webkit-backdrop-filter: blur(8px);
+            color: #e2e8f0; 
+            padding: 14px 40px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 30px; 
+            border: 1px solid rgba(255, 20, 147, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4), inset 0 3px 8px rgba(255, 255, 255, 0.2), inset 0 -4px 10px rgba(255, 20, 147, 0.4);
+            cursor: pointer;
+            z-index: 4; 
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+
+        .download-btn::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(255, 20, 147, 0.4) 0%, rgba(255, 105, 180, 0.1) 100%);
+            opacity: 0; 
+            transition: opacity 0.3s ease; 
+            z-index: -1;
+            border-radius: 30px;
+        }
+
+        .download-btn:hover {
+            color: #fff;
+            border-color: rgba(255, 20, 147, 0.9);
+            box-shadow: 0 0 25px rgba(255, 20, 147, 0.4), inset 0 4px 10px rgba(255, 255, 255, 0.3), inset 0 -4px 10px rgba(255, 20, 147, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .download-btn:hover::before { opacity: 1; }
+        .download-btn span { position: relative; z-index: 2; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+
+        @media (hover: hover) {
+            .download-container:has(.download-btn:hover) .image-box .preview-image {
+                filter: blur(6px) brightness(0.4);
+                transform: scale(1.02); 
+            }
+            .download-container:has(.download-btn:hover) .image-box .image-details {
+                opacity: 1;
+                transform: translate(-50%, -50%); 
+            }
+        }
+
+        .category-title {
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            position: relative;
+            z-index: 2;
+            background: rgba(15, 5, 10, 0.7);
+            border: 1px solid rgba(255, 20, 147, 0.5);
+            border-radius: 15px; 
+            padding: 10px 15px;
+            text-align: center;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 12px;
+            width: 100%;
+            position: relative;
+            z-index: 2;
+        }
+
+        .category-item {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(8px); 
+            -webkit-backdrop-filter: blur(8px);
+            color: #e2e8f0; 
+            padding: 14px 8px;
+            text-align: center;
+            border-radius: 20px; 
+            font-size: 0.9rem;
+            font-weight: bold;
+            border: 1px solid rgba(255, 20, 147, 0.2);
+            box-shadow: inset 0 2px 5px rgba(255, 255, 255, 0.1), inset 0 -2px 5px rgba(255, 20, 147, 0.15);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .category-item:hover {
+            color: #fff;
+            background: rgba(255, 20, 147, 0.1);
+            border-color: rgba(255, 20, 147, 0.8);
+            box-shadow: 0 0 15px rgba(255, 20, 147, 0.3), inset 0 3px 6px rgba(255, 255, 255, 0.2), inset 0 -3px 6px rgba(255, 20, 147, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .category-item span { position: relative; z-index: 2; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+
+        .features-section {
+            background-color: transparent;
+            padding: 40px 20px 60px 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px; 
+            flex-wrap: wrap; 
+            position: relative;
+            z-index: 2;
+        }
+
+        .feature-card {
+            background: rgba(20, 5, 15, 0.4);
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 20, 147, 0.2);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), inset 0 4px 10px rgba(255, 255, 255, 0.05), inset 0 -4px 10px rgba(255, 20, 147, 0.1);
+            padding: 30px 20px;
+            border-radius: 25px; 
+            width: 280px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
+            position: relative;
+            top: 0;
+        }
+
+        .feature-card h3 {
+            color: #fff;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            font-size: 1.15rem;
+            text-shadow: 0 0 5px rgba(255, 20, 147, 0.4);
+        }
+
+        .feature-card p {
+            color: #cbd5e1;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .feature-card:hover {
+            top: -5px;
+            border-color: rgba(255, 20, 147, 0.6);
+            box-shadow: 0 15px 30px rgba(255, 20, 147, 0.2), inset 0 6px 15px rgba(255, 255, 255, 0.1), inset 0 -6px 15px rgba(255, 20, 147, 0.2);
+            background: rgba(25, 5, 20, 0.6);
+        }
+
+        .neon-icon-svg {
+            width: 45px;
+            height: 45px;
+            stroke: #ff69b4;
+            stroke-width: 1.5;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            filter: drop-shadow(0 0 6px rgba(255, 20, 147, 0.8));
+            transition: transform 0.3s ease, filter 0.3s ease, stroke 0.3s ease;
+            display: inline-block;
+        }
+
+        .feature-card:hover .neon-icon-svg {
+            transform: scale(1.1) rotate(4deg);
+            stroke: #ff1493;
+            filter: drop-shadow(0 0 12px rgba(255, 20, 147, 1));
+        }
+
+        footer {
+            background-color: #020202;
+            color: #888;
+            text-align: center;
+            padding: 25px 15px;
+            font-size: 0.85rem;
+            position: relative;
+            z-index: 2;
+            border-top: 1px solid rgba(255, 20, 147, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 12px 20px;
+                flex-direction: column;
+                gap: 10px;
+                position: relative; 
+            }
+            .navbar ul li {
+                margin: 0 10px;
+            }
+            .header-section {
+                padding-top: 40px;
+                min-height: 45vh;
+            }
+            .main-content-wrapper {
+                gap: 20px;
+            }
+            .download-container, .category-container {
+                min-height: auto;
+                padding: 20px 15px;
+            }
+            .category-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            .features-section {
+                padding: 20px 10px;
+            }
+            .feature-card {
+                width: 100%;
+                max-width: 340px;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="neon-particle-canvas"></canvas>
+
+    <nav class="navbar">
+        <div class="logo">گالری فاکسی 🦊</div>
+        <ul>
+            <li><a href="index.html" class="glint-effect">خانه</a></li>
+            <li><a href="#" class="glint-effect">گالری</a></li>
+            <li><a href="#" class="glint-effect">درباره ما</a></li>
+        </ul>
+    </nav>
+
+    <header class="header-section">
+        <h1 class="neon-text-box">بفرما ، اینم بنر مورد نظرت قربونت بروم 🙌</h1>
+        <p class="neon-text-box">بنر یوتیوب : مدل دیپ فانک</p>
+    </header>
+
+    <main class="download-section">
+        <h2 class="neon-text-box">بنر یوتیوب فانک ادیشن</h2>
+        
+        <div class="main-content-wrapper">
+            
+            <div class="download-container" id="download-box">
+                <canvas id="download-particle-canvas" class="box-canvas"></canvas>
+
+                <div class="image-box">
+                    <img class="preview-image" src="https://i.postimg.cc/mr9F4W7Z/Gemini-Generated-Image-ii3yqwii3yqwii3y.png" alt="عکس تمرینی باکیفیت">
+                    <div class="image-details neon-text-box">این تصویر توسط google flow ایجاد شده .</div>
+                </div>
+
+                <a class="download-btn glint-effect" href="https://i.postimg.cc/mr9F4W7Z/Gemini-Generated-Image-ii3yqwii3yqwii3y.png" download="wallpaper.jpg">
+                    <span>دانلود رایگان تصویر</span>
+                </a>
+            </div>
+
+            <div class="category-container" id="category-box">
+                <canvas id="category-particle-canvas" class="box-canvas"></canvas>
+
+                <div class="category-title neon-text-box">دسته‌بندی‌های پیشنهادی یوتیوب</div>
+                <div class="category-grid">
+                    <div class="category-item glint-effect"><span>بنر یوتیوب</span></div>
+                    <div class="category-item glint-effect"><span>لوگو یوتیوب</span></div>
+                    <div class="category-item glint-effect"><span>اینترو موشن</span></div>
+                    <div class="category-item glint-effect"><span>کاور ویدیو (تامبنیل)</span></div>
+                    <div class="category-item glint-effect"><span>اوتپوت یوتیوب</span></div>
+                    <div class="category-item glint-effect"><span>والپیپر گیمینگ</span></div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <section class="features-section">
+        <div class="feature-card glint-effect">
+            <svg class="neon-icon-svg" viewBox="0 0 24 24">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+            <h3>دانلود سریع</h3>
+            <p>برای دانلود بدون محدودیت کلیک کنید</p>
+        </div>
+
+        <div class="feature-card glint-effect">
+            <svg class="neon-icon-svg" viewBox="0 0 24 24">
+                <path d="M6 3h12l4 6-10 12L2 9z"></path>
+                <path d="M11 3 3 9l9 12 9-12-8-6z"></path>
+                <path d="M2 9h20"></path>
+            </svg>
+            <h3>کیفیت عالی</h3>
+            <p>تمام تصاویر با رزولوشن بالا و مناسب برای دسکتاپ و کارهای گرافیکی هستند.</p>
+        </div>
+
+        <div class="feature-card glint-effect">
+            <svg class="neon-icon-svg" viewBox="0 0 24 24">
+                <polyline points="22 12 2 12 2 21 22 21 22 12"></polyline>
+                <rect x="1" y="7" width="22" height="5"></rect>
+                <line x1="12" y1="22" x2="12" y2="7"></line>
+                <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path>
+                <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path>
+            </svg>
+            <h3>۱۰۰٪ رایگان</h3>
+            <p>استفاده از تمام عکس‌ها برای مصارف شخصی و تجاری کاملاً رایگان است.</p>
+        </div>
+    </section>
+
+    <footer>
+        <p class="neon-text-box">© ۲۰۲۶ طراحی شده برای تمرین کدنویسی وب. تمام حقوق محفوظ است.</p>
+    </footer>
+
+    <script>
+        const isMobile = window.innerWidth <= 768;
+        const canvas = document.getElementById('neon-particle-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const particles = [];
+        const colors = [
+            'rgba(255, 20, 147, ',   
+            'rgba(255, 105, 180, ',  
+            'rgba(255, 255, 255, ',  
+            'rgba(255, 182, 193, '   
+        ];
+
+        class Particle {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.alpha = Math.random() * 0.5 + 0.3; 
+                this.type = Math.random() > 0.6 ? 'dot' : 'worm'; 
+                
+                if (this.type === 'dot') {
+                    this.size = Math.random() * 1.5 + 0.5; 
+                    this.speedX = (Math.random() * 0.4 - 0.2); 
+                    this.speedY = (Math.random() * 0.4 - 0.2);
+                } else {
+                    this.size = Math.random() * 1.2 + 0.6; 
+                    this.speedX = (Math.random() * 0.5 - 0.25);
+                    this.speedY = (Math.random() * 0.5 - 0.25);
+                    this.angle = Math.random() * Math.PI * 2;
+                    this.wormLength = isMobile ? 5 : 8; 
+                    this.history = []; 
+                }
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.type === 'worm') {
+                    this.angle += (Math.random() * 0.25 - 0.125);
+                    this.x += Math.sin(this.angle) * 0.5;
+                    this.y += Math.cos(this.angle) * 0.4;
+
+                    this.history.push({x: this.x, y: this.y});
+                    if (this.history.length > this.wormLength) {
+                        this.history.shift();
+                    }
+                }
+
+                if (this.x < -10 || this.x > canvas.width + 10 || this.y < -10 || this.y > canvas.height + 10) {
+                    this.reset();
+                }
+            }
+            draw() {
+                ctx.save();
+                ctx.shadowBlur = isMobile ? 2 : 8; 
+                ctx.shadowColor = this.color + '1)';
+                ctx.fillStyle = this.color + this.alpha + ')';
+                ctx.strokeStyle = this.color + this.alpha + ')';
+
+                if (this.type === 'dot') {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                } else if (this.type === 'worm' && this.history.length > 1) {
+                    ctx.beginPath();
+                    ctx.lineWidth = this.size;
+                    ctx.lineCap = 'round';
+                    ctx.lineJoin = 'round';
+                    ctx.moveTo(this.history[0].x, this.history[0].y);
+                    for (let i = 1; i < this.history.length; i++) {
+                        ctx.lineTo(this.history[i].x, this.history[i].y);
+                    }
+                    ctx.stroke();
+                }
+                ctx.restore();
+            }
+        }
+
+        const particleCount = isMobile ? 70 : 160;
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+
+        class LightningBolt {
+            constructor() {
+                this.segments = [];
+                this.alpha = Math.random() * 0.2 + 0.15;
+                this.fadeRate = Math.random() * 0.01 + 0.005;
+                this.color = colors[Math.floor(Math.random() * colors.length)]; 
+                this.generate();
+            }
+
+            generate() {
+                let startX = Math.random() * canvas.width;
+                let startY = Math.random() * (canvas.height / 3); 
+                this.segments.push({x1: startX, y1: startY, x2: startX, y2: startY});
+                let activeEnds = [{x: startX, y: startY, angle: (Math.random() * 0.5 - 0.25) + Math.PI / 2}];
+                for (let i = 0; i < (isMobile ? 12 : 20); i++) {
+                    let newEnds = [];
+                    activeEnds.forEach(end => {
+                        if (end.y > canvas.height) return;
+
+                        let length = Math.random() * 40 + 10;
+                        let angle = end.angle + (Math.random() - 0.5) * 1.2;
+                        let nx = end.x + Math.cos(angle) * length;
+                        let ny = end.y + Math.sin(angle) * length;
+                        this.segments.push({x1: end.x, y1: end.y, x2: nx, y2: ny});
+                        newEnds.push({x: nx, y: ny, angle: angle});
+
+                        if (Math.random() > 0.75) {
+                            let bAngle = end.angle + (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 0.8 + 0.4);
+                            let bx = end.x + Math.cos(bAngle) * length * 0.8;
+                            let by = end.y + Math.sin(bAngle) * length * 0.8;
+                            this.segments.push({x1: end.x, y1: end.y, x2: bx, y2: by});
+                            newEnds.push({x: bx, y: by, angle: bAngle});
+                        }
+                    });
+                    activeEnds = newEnds;
+                }
+            }
+
+            update() {
+                this.alpha -= this.fadeRate;
+                return this.alpha > 0;
+            }
+
+            draw(bCtx) {
+                bCtx.save();
+                bCtx.lineCap = 'round';
+                bCtx.lineJoin = 'round';
+                bCtx.filter = 'blur(8px)';
+                bCtx.shadowBlur = 40;
+                bCtx.shadowColor = this.color + '1)';
+                bCtx.beginPath();
+                this.segments.forEach(seg => {
+                    bCtx.moveTo(seg.x1, seg.y1);
+                    bCtx.lineTo(seg.x2, seg.y2);
+                });
+                bCtx.strokeStyle = this.color + (this.alpha * 0.6) + ')';
+                bCtx.lineWidth = 4;
+                bCtx.stroke();
+                bCtx.shadowBlur = 10;
+                bCtx.beginPath();
+                this.segments.forEach(seg => {
+                    bCtx.moveTo(seg.x1, seg.y1);
+                    bCtx.lineTo(seg.x2, seg.y2);
+                });
+                bCtx.strokeStyle = 'rgba(255, 255, 255, ' + (this.alpha * 0.4) + ')';
+                bCtx.lineWidth = 2;
+                bCtx.stroke();
+
+                bCtx.restore();
+            }
+        }
+        const lightnings = [];
+        const catCanvas = document.getElementById('category-particle-canvas');
+        const catCtx = catCanvas.getContext('2d');
+        const categoryBox = document.getElementById('category-box');
+
+        const downCanvas = document.getElementById('download-particle-canvas');
+        const downCtx = downCanvas.getContext('2d');
+        const downloadBox = document.getElementById('download-box');
+
+        function resizeBoxCanvases() {
+            catCanvas.width = categoryBox.clientWidth;
+            catCanvas.height = categoryBox.clientHeight;
+            downCanvas.width = downloadBox.clientWidth;
+            downCanvas.height = downloadBox.clientHeight;
+        }
+        window.addEventListener('resize', resizeBoxCanvases);
+        resizeBoxCanvases();
+
+        class AmbientWorm {
+            constructor(w, h) {
+                this.w = w;
+                this.h = h;
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * this.w;
+                this.y = Math.random() * this.h;
+                this.size = Math.random() * 1.2 + 0.6; 
+                this.speedX = (Math.random() * 0.5 - 0.25);
+                this.speedY = (Math.random() * 0.4 - 0.2);
+                this.angle = Math.random() * Math.PI * 2;
+                this.wormLength = isMobile ? 4 : 7;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.alpha = Math.random() * 0.4 + 0.2; 
+                this.history = [];
+            }
+            update(w, h) {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.angle += (Math.random() * 0.4 - 0.2);
+                this.x += Math.sin(this.angle) * 0.4;
+                this.y += Math.cos(this.angle) * 0.4;
+                this.history.push({x: this.x, y: this.y});
+                if (this.history.length > this.wormLength) {
+                    this.history.shift();
+                }
+
+                if (this.x < -10 || this.x > w + 10 || this.y < -10 || this.y > h + 10) {
+                    this.reset();
+                }
+            }
+            draw(bCtx) {
+                if (this.history.length < 2) return;
+                bCtx.save();
+                bCtx.shadowBlur = isMobile ? 2 : 6;
+                bCtx.shadowColor = this.color + '1)';
+                bCtx.strokeStyle = this.color + this.alpha + ')';
+                bCtx.lineWidth = this.size;
+                bCtx.lineCap = 'round';
+                bCtx.lineJoin = 'round';
+                bCtx.beginPath();
+                bCtx.moveTo(this.history[0].x, this.history[0].y);
+                for (let i = 1; i < this.history.length; i++) {
+                    bCtx.lineTo(this.history[i].x, this.history[i].y);
+                }
+                bCtx.stroke();
+                bCtx.restore();
+            }
+        }
+
+        const catWorms = [];
+        const downWorms = [];
+        const boxWormCount = isMobile ? 8 : 18;
+        for (let i = 0; i < boxWormCount; i++) {
+            catWorms.push(new AmbientWorm(categoryBox.clientWidth, categoryBox.clientHeight));
+            downWorms.push(new AmbientWorm(downloadBox.clientWidth, downloadBox.clientHeight));
+        }
+
+        class InteractiveSnake {
+            constructor(numJoints) {
+                this.numJoints = numJoints;
+                this.joints = [];
+                for (let i = 0; i < numJoints; i++) {
+                    this.joints.push({ x: 0, y: 0 });
+                }
+                this.mouseX = 0;
+                this.mouseY = 0;
+                this.targetAlpha = 0;
+                this.currentAlpha = 0;
+            }
+            initPosition(x, y) {
+                this.joints.forEach(joint => {
+                    joint.x = x;
+                    joint.y = y;
+                });
+            }
+            update() {
+                this.currentAlpha += (this.targetAlpha - this.currentAlpha) * 0.12;
+                if (this.currentAlpha < 0.01) return false;
+
+                this.joints[0].x += (this.mouseX - this.joints[0].x) * 0.3;
+                this.joints[0].y += (this.mouseY - this.joints[0].y) * 0.3;
+                for (let i = 1; i < this.numJoints; i++) {
+                    const prev = this.joints[i - 1];
+                    const current = this.joints[i];
+                    current.x += (prev.x - current.x) * 0.3;
+                    current.y += (prev.y - current.y) * 0.3;
+                }
+                return true;
+            }
+            draw(bCtx) {
+                bCtx.save();
+                bCtx.shadowBlur = 30; 
+                bCtx.shadowColor = 'rgba(255, 20, 147, 0.8)';
+                bCtx.lineCap = 'round';
+                bCtx.lineJoin = 'round';
+                for (let i = 0; i < this.numJoints - 1; i++) {
+                    const p1 = this.joints[i];
+                    const p2 = this.joints[i + 1];
+                    const thickness = 22 * (1 - i / this.numJoints) + 4;
+                    const alphaFactor = (1 - i / this.numJoints) * this.currentAlpha;
+
+                    bCtx.beginPath();
+                    bCtx.moveTo(p1.x, p1.y);
+                    bCtx.lineTo(p2.x, p2.y);
+                    bCtx.strokeStyle = `rgba(255, 20, 147, ${0.1 * alphaFactor})`;
+                    bCtx.lineWidth = thickness;
+                    bCtx.stroke();
+                }
+                bCtx.restore();
+            }
+        }
+
+        const catSnake = new InteractiveSnake(12);
+        const downSnake = new InteractiveSnake(12);
+
+        if (!isMobile) {
+            categoryBox.addEventListener('mousemove', (e) => {
+                const rect = categoryBox.getBoundingClientRect();
+                catSnake.mouseX = e.clientX - rect.left;
+                catSnake.mouseY = e.clientY - rect.top;
+            });
+            categoryBox.addEventListener('mouseenter', (e) => {
+                catSnake.targetAlpha = 1;
+                const rect = categoryBox.getBoundingClientRect();
+                catSnake.initPosition(e.clientX - rect.left, e.clientY - rect.top);
+            });
+            categoryBox.addEventListener('mouseleave', () => { catSnake.targetAlpha = 0; });
+
+            downloadBox.addEventListener('mousemove', (e) => {
+                const rect = downloadBox.getBoundingClientRect();
+                downSnake.mouseX = e.clientX - rect.left;
+                downSnake.mouseY = e.clientY - rect.top;
+            });
+            downloadBox.addEventListener('mouseenter', (e) => {
+                downSnake.targetAlpha = 1;
+                const rect = downloadBox.getBoundingClientRect();
+                downSnake.initPosition(e.clientX - rect.left, e.clientY - rect.top);
+            });
+            downloadBox.addEventListener('mouseleave', () => { downSnake.targetAlpha = 0; });
+        }
+
+        let flashAlpha = 0;
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (Math.random() < 0.006) { 
+                lightnings.push(new LightningBolt());
+                flashAlpha = 0.03;
+            }
+
+            if (flashAlpha > 0) {
+                ctx.fillStyle = `rgba(255, 20, 147, ${flashAlpha})`;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                flashAlpha -= 0.005;
+            }
+
+            for (let i = lightnings.length - 1; i >= 0; i--) {
+                if (!lightnings[i].update()) {
+                    lightnings.splice(i, 1);
+                } else {
+                    lightnings[i].draw(ctx);
+                }
+            }
+
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            catCtx.clearRect(0, 0, catCanvas.width, catCanvas.height);
+            catWorms.forEach(bw => {
+                bw.update(catCanvas.width, catCanvas.height);
+                bw.draw(catCtx);
+            });
+            if (!isMobile && catSnake.update()) {
+                catSnake.draw(catCtx);
+            }
+
+            downCtx.clearRect(0, 0, downCanvas.width, downCanvas.height);
+            downWorms.forEach(bw => {
+                bw.update(downCanvas.width, downCanvas.height);
+                bw.draw(downCtx);
+            });
+            if (!isMobile && downSnake.update()) {
+                downSnake.draw(downCtx);
+            }
+
+            requestAnimationFrame(animate);
+        }
+        
+        setTimeout(resizeBoxCanvases, 100);
+        animate();
+    </script>
+
+</body>
+</html>

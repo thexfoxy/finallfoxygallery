@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link class="icon" href="https://i.postimg.cc/W3khzYwz/tails-prower-480px.png" type="image/x-icon">
+    <title>گالری فاکسی | صفحه اصلی</title>
+
+    <style>
+        @font-face {
+            font-family: 'IBM Plex Sans Arabic';
+            src: url('fonts/IBMPlexSansArabic-Bold.ttf') format('truetype');
+            font-weight: bold;
+            font-style: normal;
+        }
+
+        body {
+            font-family: 'IBM Plex Sans Arabic', sans-serif;
+            background-color: #050505; 
+            color: #eee; 
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        #neon-particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none; 
+            z-index: -1; 
+            will-change: transform;
+        }
+
+        .neon-text-box {
+            display: inline-block;
+            padding: 10px 20px;
+            background: rgba(15, 15, 15, 0.75); 
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 20, 147, 0.4); 
+            box-shadow: 0 0 15px rgba(255, 20, 147, 0.25), inset 0 2px 5px rgba(255, 255, 255, 0.1), inset 0 -2px 5px rgba(255, 20, 147, 0.2);
+            color: #ffffff;
+            font-size: clamp(0.9rem, 4vw, 1.2rem); 
+            box-sizing: border-box;
+            max-width: 90%;
+            text-shadow: 0 2px 4px rgba(255, 20, 147, 0.3);
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(13, 13, 13, 0.85); 
+            backdrop-filter: blur(10px); 
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 20, 147, 0.3); 
+            box-shadow: 0 4px 20px rgba(255, 20, 147, 0.15); 
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 50px;
+            box-sizing: border-box;
+            z-index: 1000; 
+        }
+
+        .navbar .logo {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #ff1493; 
+            text-shadow: 0 0 10px rgba(255, 20, 147, 0.6);
+        }
+
+        .navbar ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: row-reverse; 
+        }
+
+        .navbar ul li {
+            margin-left: 20px;
+        }
+
+        .navbar ul li a {
+            text-decoration: none;
+            color: #eee;
+            font-weight: bold;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            padding: 5px 12px;
+            border-radius: 10px;
+            display: inline-block; /* فیکس باگ glint: overflow:hidden نیاز به block-level داره */
+        }
+
+        .navbar ul li a:hover {
+            color: #fff;
+            background: rgba(255, 20, 147, 0.25); 
+            box-shadow: 0 0 10px rgba(255, 20, 147, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.2);
+        }
+
+        /* هدر کاملاً مستقل سایت */
+        .hero-section {
+            min-height: 38vh; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 95px 20px 10px 20px; 
+            box-sizing: border-box;
+            z-index: 2;
+        }
+
+        .svg-hero-container {
+            width: 100%;
+            max-width: 420px;
+            height: auto;
+            margin-bottom: 5px;
+        }
+
+        .svg-hero-container text {
+            font-family: 'IBM Plex Sans Arabic', sans-serif;
+            font-size: 80px;
+            font-weight: bold;
+            text-anchor: middle;
+            dominant-baseline: middle;
+            paint-order: stroke fill;
+            fill: rgba(255, 20, 147, 0);
+            stroke: #ff1493;
+            stroke-width: 2.5px;
+            stroke-dasharray: 700;
+            stroke-dashoffset: 700;
+            filter: url(#neon-glow);
+            animation: drawStroke 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards,
+                      fillColor 1.2s cubic-bezier(0.4, 0, 0.2, 1) 1.8s forwards;
+        }
+
+        @keyframes drawStroke { to { stroke-dashoffset: 0; } }
+        @keyframes fillColor {
+            to {
+                fill: rgba(255, 20, 147, 1);
+                stroke-width: 1px;
+                filter: drop-shadow(0 0 15px rgba(255, 20, 147, 0.9)) drop-shadow(0 0 30px rgba(255, 20, 147, 0.6));
+            }
+        }
+
+        .hero-cta-container {
+            display: flex;
+            gap: 20px;
+            opacity: 0;
+            transform: translateY(15px);
+            animation: fadeUpIn 1.2s cubic-bezier(0.25, 1, 0.5, 1) 2s forwards;
+        }
+
+        @keyframes fadeUpIn { to { opacity: 1; transform: translateY(0); } }
+
+        .hero-btn {
+            display: inline-block;
+            background: rgba(20, 5, 15, 0.4); 
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px);
+            color: #e2e8f0; 
+            padding: 12px 28px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 25px; 
+            border: 1px solid rgba(255, 20, 147, 0.2);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            cursor: pointer;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .hero-btn:hover {
+            transform: translateY(-4px);
+            color: #fff;
+            border-color: rgba(255, 20, 147, 0.6);
+            box-shadow: 0 15px 30px rgba(255, 20, 147, 0.25);
+            background: rgba(25, 5, 20, 0.6);
+        }
+
+        /* ==========================================================================
+           افکت درخشش نئونی حیاتی (Glint Effect) - کاملاً مهار شده در داخل المان‌ها
+           ========================================================================== */
+        .glint-effect {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .glint-effect::after {
+            content: "";
+            position: absolute;
+            top: 0; 
+            left: -150%; 
+            width: 60%; 
+            height: 100%;
+            background: linear-gradient(
+                to right, 
+                rgba(255, 255, 255, 0) 0%, 
+                rgba(255, 255, 255, 0.35) 50%, 
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: skewX(-25deg); 
+            z-index: 5;
+            pointer-events: none;
+            opacity: 0;
+            filter: blur(4px);
+        }
+
+        .glint-effect:hover::after {
+            opacity: 1;
+            animation: glintSweep 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        @keyframes glintSweep {
+            0% { left: -150%; }
+            100% { left: 150%; }
+        }
+
+        /* ==========================================================================
+           باکس اختصاصی و مستقل ویترین پیشنهادات (مشابه صفحات دانلود اختصاصی)
+           ========================================================================== */
+        .showcase-wrapper {
+            width: 90%;
+            max-width: 1100px;
+            margin: 20px auto 40px auto;
+            background: rgba(15, 6, 12, 0.45); 
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 32px;
+            border: 1px solid rgba(255, 20, 147, 0.25);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 1px 3px rgba(255, 255, 255, 0.05);
+            padding: 40px 20px;
+            box-sizing: border-box;
+            z-index: 5;
+            position: relative;
+        }
+
+        .showcase-title {
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 30px;
+            font-size: 1.3rem;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 20, 147, 0.5);
+            letter-spacing: 0.5px;
+        }
+
+        .slider-section {
+            position: relative;
+            width: 100%;
+            height: clamp(230px, 35vh, 330px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: visible;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .slider-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1200px; 
+            transform-style: preserve-3d;
+        }
+
+        .slider-item {
+            position: absolute;
+            width: clamp(250px, 38vw, 420px);
+            aspect-ratio: 16 / 9;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.7);
+            border: 1px solid rgba(255, 20, 147, 0.15);
+            background: rgba(20, 5, 15, 0.6);
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.3, 1), 
+                        filter 0.6s cubic-bezier(0.25, 1, 0.3, 1), 
+                        opacity 0.6s cubic-bezier(0.25, 1, 0.3, 1),
+                        box-shadow 0.4s ease, border-color 0.4s ease;
+            will-change: transform, opacity, filter;
+            backface-visibility: hidden;
+            -webkit-user-drag: none;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .slider-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            pointer-events: none; 
+            -webkit-user-drag: none;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* دکمه‌های ناوبری اسلایدر درون باکس پیشنهادات */
+        .nav-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 48px;
+            height: 48px;
+            background: rgba(15, 5, 12, 0.85);
+            border: 1px solid rgba(255, 20, 147, 0.4);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 200;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .nav-arrow:hover {
+            background: rgba(255, 20, 147, 0.2);
+            border-color: rgba(255, 20, 147, 0.9);
+            box-shadow: 0 0 20px rgba(255, 20, 147, 0.6);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .nav-arrow:active { transform: translateY(-50%) scale(0.95); }
+        .nav-arrow.prev { left: -10px; }
+        .nav-arrow.next { right: -10px; }
+
+        .nav-arrow svg {
+            width: 18px;
+            height: 18px;
+            fill: none;
+            stroke: #ff1493;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            pointer-events: none;
+        }
+
+        /* بخش ویژگی‌های پایینی */
+        .features-section {
+            background-color: transparent;
+            padding: 10px 20px 40px 20px;
+            display: flex;
+            justify-content: center;
+            gap: 25px; 
+            flex-wrap: wrap; 
+            z-index: 2;
+        }
+
+        .feature-card {
+            background: rgba(20, 5, 15, 0.4);
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 20, 147, 0.2);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            padding: 25px 20px;
+            border-radius: 25px; 
+            width: 280px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .feature-card h3 {
+            color: #fff;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            font-size: 1.15rem;
+            text-shadow: 0 0 5px rgba(255, 20, 147, 0.4);
+        }
+
+        .feature-card p {
+            color: #cbd5e1;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 20, 147, 0.6);
+            box-shadow: 0 15px 30px rgba(255, 20, 147, 0.2);
+            background: rgba(25, 5, 20, 0.6);
+        }
+
+        .neon-icon-svg {
+            width: 45px;
+            height: 45px;
+            stroke: #ff69b4;
+            stroke-width: 1.5;
+            fill: none;
+            filter: drop-shadow(0 0 6px rgba(255, 20, 147, 0.8));
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .feature-card:hover .neon-icon-svg {
+            transform: scale(1.1) rotate(4deg);
+            stroke: #ff1493;
+            filter: drop-shadow(0 0 12px rgba(255, 20, 147, 1));
+        }
+
+        footer {
+            background-color: #020202;
+            color: #888;
+            text-align: center;
+            padding: 25px 15px;
+            font-size: 0.85rem;
+            z-index: 2;
+            border-top: 1px solid rgba(255, 20, 147, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .navbar { padding: 12px 20px; flex-direction: column; gap: 10px; }
+            .navbar ul li { margin: 0 10px; }
+            .hero-section { padding-top: 130px; min-height: 35vh; }
+            .hero-cta-container { flex-direction: column; gap: 12px; width: 100%; max-width: 260px; }
+            .showcase-wrapper { padding: 25px 10px; width: 95%; margin-bottom: 25px; }
+            .showcase-title { font-size: 1.1rem; margin-bottom: 20px; }
+            .slider-section { height: 200px; }
+            .nav-arrow { width: 38px; height: 38px; }
+            .nav-arrow.prev { left: 0px; }
+            .nav-arrow.next { right: 0px; }
+            .feature-card { width: 100%; max-width: 340px; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="neon-particle-canvas"></canvas>
+
+    <nav class="navbar">
+        <div class="logo">گالری فاکسی 🦊</div>
+        <ul>
+            <li><a href="#" class="glint-effect">خانه</a></li>
+            <li><a href="banner-youtube.html" class="glint-effect">گالری</a></li>
+            <li><a href="#" class="glint-effect">درباره ما</a></li>
+        </ul>
+    </nav>
+
+    <header class="hero-section">
+        <svg class="svg-hero-container" viewBox="0 0 550 120">
+            <defs>
+                <filter id="neon-glow" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                    <feMerge>
+                        <feMergeNode in="coloredBlur"/>
+                        <feMergeNode in="coloredBlur"/>
+                        <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                </filter>
+            </defs>
+            <text x="275" y="65">Welcome <3</text>
+        </svg>
+        
+        <div class="hero-cta-container">
+            <a href="banner-youtube.html" class="hero-btn glint-effect">تماشای گالری</a>
+            <a href="#" class="hero-btn glint-effect">سفارش بنر</a>
+        </div>
+    </header>
+
+    <main class="showcase-wrapper">
+        <h2 class="showcase-title">✨ طرح‌های پیشنهادی گالری فاکسی ✨</h2>
+        
+        <section class="slider-section">
+            <div class="nav-arrow prev" id="prevBtn">
+                <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </div>
+
+            <div class="slider-container" id="sliderContainer">
+                <a href="banner-anime.html" class="slider-item glint-effect">
+                    <img src="https://i.postimg.cc/3xcg7Z6n/photo-2026-06-04-17-30-12-jpg-202606041733.jpg" alt="Phonk Deep">
+                </a>
+                <a href="banner-cyber-f.html" class="slider-item glint-effect">
+                    <img src="https://i.postimg.cc/90b7kPZb/Gemini-Generated-Image-4ttudq4ttudq4ttu.png" alt="Neon Purple Edition">
+                </a>
+                <a href="banner-iran-f.html" class="slider-item glint-effect">
+                    <img src="https://i.postimg.cc/mr9F4W7Z/Gemini-Generated-Image-ii3yqwii3yqwii3y.png" alt="Cyber Fox Style">
+                </a>
+                <a href="banner-youtube.html" class="slider-item glint-effect">
+                    <img src="https://i.postimg.cc/kXNprn8Q/A-dark-themed-You-Tube-channel-202606041853.jpg" alt="F Letter Phonk">
+                </a>
+            </div>
+
+            <div class="nav-arrow next" id="nextBtn">
+                <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </div>
+        </section>
+    </main>
+
+    <section class="features-section">
+        <div class="feature-card glint-effect">
+            <svg class="neon-icon-svg" viewBox="0 0 24 24">
+                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+            <h3>دانلود سریع</h3>
+            <p>برای دانلود بدون محدودیت کلیک کنید</p>
+        </div>
+
+        <div class="feature-card glint-effect">
+            <svg class="neon-icon-svg" viewBox="0 0 24 24">
+                <path d="M6 3h12l4 6-10 12L2 9z"></path>
+                <path d="M11 3 3 9l9 12 9-12-8-6z"></path>
+                <path d="M2 9h20"></path>
+            </svg>
+            <h3>کیفیت عالی</h3>
+            <p>تمام تصاویر با رزولوشن بالا و مناسب برای دسکتاپ و کارهای گرافیکی هستند.</p>
+        </div>
+
+        <div class="feature-card glint-effect">
+            <svg class="neon-icon-svg" viewBox="0 0 24 24">
+                <polyline points="22 12 2 12 2 21 22 21 22 12"></polyline>
+                <rect x="1" y="7" width="22" height="5"></rect>
+                <line x1="12" y1="22" x2="12" y2="7"></line>
+                <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path>
+                <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path>
+            </svg>
+            <h3>۱۰۰٪ رایگان</h3>
+            <p>استفاده از تمام عکس‌ها برای مصارف شخصی و تجاری کاملاً رایگان است.</p>
+        </div>
+    </section>
+
+    <footer>
+        <p class="neon-text-box">© ۲۰۲۶ طراحی شده برای تمرین کدنویسی وب. تمام حقوق محفوظ است.</p>
+    </footer>
+
+    <script>
+        // ==========================================================================
+        // رندر ذرات نئونی پس‌زمینه
+        // ==========================================================================
+        const isMobile = window.innerWidth <= 768;
+        const canvas = document.getElementById('neon-particle-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        const particles = [];
+        const colors = ['rgba(255, 20, 147, ', 'rgba(255, 105, 180, ', 'rgba(255, 255, 255, ', 'rgba(255, 182, 193, '];
+
+        class Particle {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.alpha = Math.random() * 0.5 + 0.3; 
+                this.type = Math.random() > 0.6 ? 'dot' : 'worm'; 
+                if (this.type === 'dot') {
+                    this.size = Math.random() * 1.5 + 0.5; 
+                    this.speedX = (Math.random() * 0.4 - 0.2); 
+                    this.speedY = (Math.random() * 0.4 - 0.2);
+                } else {
+                    this.size = Math.random() * 1.2 + 0.6; 
+                    this.speedX = (Math.random() * 0.5 - 0.25);
+                    this.speedY = (Math.random() * 0.5 - 0.25);
+                    this.angle = Math.random() * Math.PI * 2;
+                    this.wormLength = isMobile ? 5 : 8; 
+                    this.history = []; 
+                }
+            }
+            update() {
+                this.x += this.speedX; this.y += this.speedY;
+                if (this.type === 'worm') {
+                    this.angle += (Math.random() * 0.25 - 0.125);
+                    this.x += Math.sin(this.angle) * 0.5; this.y += Math.cos(this.angle) * 0.4;
+                    this.history.push({x: this.x, y: this.y});
+                    if (this.history.length > this.wormLength) this.history.shift();
+                }
+                if (this.x < -10 || this.x > canvas.width + 10 || this.y < -10 || this.y > canvas.height + 10) this.reset();
+            }
+            draw() {
+                ctx.save();
+                ctx.shadowBlur = isMobile ? 2 : 8; ctx.shadowColor = this.color + '1)';
+                ctx.fillStyle = this.color + this.alpha + ')'; ctx.strokeStyle = this.color + this.alpha + ')';
+                if (this.type === 'dot') {
+                    ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+                } else if (this.type === 'worm' && this.history.length > 1) {
+                    ctx.beginPath(); ctx.lineWidth = this.size; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+                    ctx.moveTo(this.history[0].x, this.history[0].y);
+                    for (let i = 1; i < this.history.length; i++) ctx.lineTo(this.history[i].x, this.history[i].y);
+                    ctx.stroke();
+                }
+                ctx.restore();
+            }
+        }
+
+        for (let i = 0; i < (isMobile ? 70 : 160); i++) particles.push(new Particle());
+
+        class LightningBolt {
+            constructor() {
+                this.segments = []; this.alpha = Math.random() * 0.2 + 0.15;
+                this.fadeRate = Math.random() * 0.01 + 0.005; this.color = colors[Math.floor(Math.random() * colors.length)]; 
+                this.generate();
+            }
+            generate() {
+                let startX = Math.random() * canvas.width; let startY = Math.random() * (canvas.height / 3); 
+                this.segments.push({x1: startX, y1: startY, x2: startX, y2: startY});
+                let activeEnds = [{x: startX, y: startY, angle: (Math.random() * 0.5 - 0.25) + Math.PI / 2}];
+                for (let i = 0; i < (isMobile ? 12 : 20); i++) {
+                    let newEnds = [];
+                    activeEnds.forEach(end => {
+                        if (end.y > canvas.height) return;
+                        let length = Math.random() * 40 + 10; let angle = end.angle + (Math.random() - 0.5) * 1.2;
+                        let nx = end.x + Math.cos(angle) * length; let ny = end.y + Math.sin(angle) * length;
+                        this.segments.push({x1: end.x, y1: end.y, x2: nx, y2: ny}); newEnds.push({x: nx, y: ny, angle: angle});
+                        if (Math.random() > 0.75) {
+                            let bAngle = end.angle + (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 0.8 + 0.4);
+                            let bx = end.x + Math.cos(bAngle) * length * 0.8; let by = end.y + Math.sin(bAngle) * length * 0.8;
+                            this.segments.push({x1: end.x, y1: end.y, x2: bx, y2: by}); newEnds.push({x: bx, y: by, angle: bAngle});
+                        }
+                    });
+                    activeEnds = newEnds;
+                }
+            }
+            update() { this.alpha -= this.fadeRate; return this.alpha > 0; }
+            draw(bCtx) {
+                bCtx.save(); bCtx.lineCap = 'round'; bCtx.lineJoin = 'round'; bCtx.filter = 'blur(8px)';
+                bCtx.shadowBlur = 40; bCtx.shadowColor = this.color + '1)'; bCtx.beginPath();
+                this.segments.forEach(seg => { bCtx.moveTo(seg.x1, seg.y1); bCtx.lineTo(seg.x2, seg.y2); });
+                bCtx.strokeStyle = this.color + (this.alpha * 0.6) + ')'; bCtx.lineWidth = 4; bCtx.stroke();
+                bCtx.shadowBlur = 10; bCtx.beginPath();
+                this.segments.forEach(seg => { bCtx.moveTo(seg.x1, seg.y1); bCtx.lineTo(seg.x2, seg.y2); });
+                bCtx.strokeStyle = 'rgba(255, 255, 255, ' + (this.alpha * 0.4) + ')'; bCtx.lineWidth = 2; bCtx.stroke();
+                bCtx.restore();
+            }
+        }
+        const lightnings = [];
+        let flashAlpha = 0;
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (Math.random() < 0.006) { lightnings.push(new LightningBolt()); flashAlpha = 0.03; }
+            if (flashAlpha > 0) { ctx.fillStyle = `rgba(255, 20, 147, ${flashAlpha})`; ctx.fillRect(0, 0, canvas.width, canvas.height); flashAlpha -= 0.005; }
+            for (let i = lightnings.length - 1; i >= 0; i--) { if (!lightnings[i].update()) { lightnings.splice(i, 1); } else { lightnings[i].draw(ctx); } }
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // ==========================================================================
+        // موتور اسلایدر سه بعدی کروی بهینه‌سازی شده درون باکس پیشنهادات
+        // ==========================================================================
+        const items = Array.from(document.querySelectorAll('.slider-item'));
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        
+        let currentIndex = 0;
+
+        function updateSphericalCarousel() {
+            const total = items.length;
+            
+            items.forEach((item, index) => {
+                let offset = index - currentIndex;
+                
+                if (offset < -total / 2) offset += total;
+                if (offset > total / 2) offset -= total;
+
+                const absOffset = Math.abs(offset);
+                
+                // هندسه و فرمول چیدمان کروی سه بعدی ایده آل
+                const scale = absOffset === 0 ? 1.15 : 1 - (absOffset * 0.12);
+                const translateX = offset * (isMobile ? 80 : 150); 
+                const translateZ = -absOffset * 110; 
+                const rotateY = offset * -22; 
+                
+                const zIndex = 100 - absOffset; 
+                const opacity = absOffset === 0 ? 1 : (absOffset === 1 ? 0.75 : 0.25);
+                const blur = absOffset === 0 ? 0 : absOffset * 1.5;
+                const brightness = absOffset === 0 ? 1 : 0.5;
+
+                item.style.transform = `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`;
+                item.style.zIndex = zIndex;
+                item.style.opacity = opacity;
+                item.style.filter = `blur(${blur}px) brightness(${brightness})`;
+
+                if (absOffset === 0) {
+                    item.style.borderColor = 'rgba(255, 20, 147, 0.85)';
+                    item.style.boxShadow = '0 25px 50px rgba(255, 20, 147, 0.35), 0 0 20px rgba(255, 20, 147, 0.15)';
+                    item.style.pointerEvents = 'auto'; 
+                } else {
+                    item.style.borderColor = 'rgba(255, 20, 147, 0.1)';
+                    item.style.boxShadow = '0 15px 35px rgba(0,0,0,0.6)';
+                    item.style.pointerEvents = 'none'; 
+                }
+            });
+        }
+
+        prevBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + items.length) % items.length;
+            updateSphericalCarousel();
+        });
+
+        nextBtn.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % items.length;
+            updateSphericalCarousel();
+        });
+
+        items.forEach((item, index) => {
+            item.addEventListener('click', (e) => {
+                if (index !== currentIndex) {
+                    e.preventDefault();
+                    currentIndex = index;
+                    updateSphericalCarousel();
+                }
+            });
+        });
+
+        updateSphericalCarousel();
+    </script>
+</body>
+</html>
