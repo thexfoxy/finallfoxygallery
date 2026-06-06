@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link class="icon" href="https://i.postimg.cc/W3khzYwz/tails-prower-480px.png" type="image/x-icon">
-    <title>گالری فاکسی | صفحه اصلی</title>
+    <title>گالری فاکسی | خانه</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
 
     <style>
         @font-face {
@@ -14,8 +17,20 @@
             font-style: normal;
         }
 
+        @font-face {
+            font-family: 'Celinda';
+            src: url('fonts/CelindaRegular-DY8ZD.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        :root {
+            --font-fa: 'IBM Plex Sans Arabic', sans-serif;
+            --font-en: 'Celinda', 'Outfit', sans-serif;
+        }
+
         body {
-            font-family: 'IBM Plex Sans Arabic', sans-serif;
+            font-family: var(--font-fa);
             background-color: #050505; 
             color: #eee; 
             margin: 0;
@@ -99,7 +114,7 @@
             transition: all 0.3s ease;
             padding: 5px 12px;
             border-radius: 10px;
-            display: inline-block; /* فیکس باگ glint: overflow:hidden نیاز به block-level داره */
+            display: inline-block;
         }
 
         .navbar ul li a:hover {
@@ -108,7 +123,6 @@
             box-shadow: 0 0 10px rgba(255, 20, 147, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.2);
         }
 
-        /* هدر کاملاً مستقل سایت */
         .hero-section {
             min-height: 38vh; 
             display: flex;
@@ -121,9 +135,6 @@
             z-index: 2;
         }
 
-        /* ==========================================================================
-           Welcome - انیمیشن ورودی تمیز و نئونی
-           ========================================================================== */
         .welcome-hero {
             display: flex;
             flex-direction: column;
@@ -177,10 +188,7 @@
         }
 
         @keyframes charPop {
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         @keyframes charFill {
@@ -268,9 +276,6 @@
 
         .hero-btn:hover::before { opacity: 1; }
 
-        /* ==========================================================================
-           افکت درخشش نئونی حیاتی (Glint Effect) - کاملاً مهار شده در داخل المان‌ها
-           ========================================================================== */
         .glint-effect {
             position: relative;
             overflow: hidden;
@@ -306,9 +311,6 @@
             100% { left: 150%; }
         }
 
-        /* ==========================================================================
-           باکس اختصاصی و مستقل ویترین پیشنهادات (مشابه صفحات دانلود اختصاصی)
-           ========================================================================== */
         .showcase-wrapper {
             width: 90%;
             max-width: 1100px;
@@ -392,7 +394,6 @@
             -webkit-user-select: none;
         }
 
-        /* دکمه‌های ناوبری اسلایدر درون باکس پیشنهادات */
         .nav-arrow {
             position: absolute;
             top: 50%;
@@ -435,7 +436,6 @@
             pointer-events: none;
         }
 
-        /* بخش ویژگی‌های پایینی */
         .features-section {
             background-color: transparent;
             padding: 10px 20px 40px 20px;
@@ -509,7 +509,7 @@
         }
 
         @media (max-width: 768px) {
-            .navbar { padding: 12px 20px; flex-direction: column; gap: 10px; }
+            .navbar { padding: 12px 20px; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; gap: 10px; } .navbar ul { grid-column: 1 / -1; grid-row: 2; justify-content: center; } .navbar .lang-btn-wrap { grid-column: 2; grid-row: 1; }
             .navbar ul li { margin: 0 10px; }
             .hero-section { padding-top: 130px; min-height: 35vh; }
             .hero-cta-container { flex-direction: column; gap: 12px; width: 100%; max-width: 260px; }
@@ -521,6 +521,178 @@
             .nav-arrow.next { right: 0px; }
             .feature-card { width: 100%; max-width: 340px; }
         }
+
+        .lang-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 20, 147, 0.35);
+            border-radius: 20px;
+            padding: 6px 14px;
+            color: #ddd;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 5px rgba(255,255,255,0.08), inset 0 -2px 5px rgba(255,20,147,0.15);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .lang-btn:hover {
+            color: #fff;
+            border-color: rgba(255, 20, 147, 0.8);
+            box-shadow: 0 0 12px rgba(255,20,147,0.3), inset 0 2px 5px rgba(255,255,255,0.15), inset 0 -2px 5px rgba(255,20,147,0.3);
+        }
+        .lang-btn .lang-icon { font-size: 1rem; }
+
+        body.en {
+            font-family: var(--font-en);
+            direction: ltr;
+        }
+        body.en .navbar ul { flex-direction: row; }
+        body.en .navbar ul li { margin-left: 0; margin-right: 20px; }
+        body.en .navbar .logo { font-family: 'Celinda', sans-serif; font-size: 1.4rem; letter-spacing: 0.04em; }
+        body.en .navbar ul li a { font-family: 'Outfit', sans-serif; font-size: 1rem; letter-spacing: 0.02em; }
+        body.en .welcome-label { font-family: 'Outfit', sans-serif; font-size: clamp(0.75rem, 2vw, 0.9rem); letter-spacing: 0.35em; }
+        body.en .showcase-title { font-family: 'Celinda', sans-serif; font-size: clamp(1.2rem, 3vw, 1.65rem); letter-spacing: 0.03em; }
+        body.en .hero-btn span { font-family: 'Outfit', sans-serif; font-size: 1rem; letter-spacing: 0.03em; }
+        body.en .feature-card h3 { font-family: 'Celinda', sans-serif; font-size: 1.25rem; letter-spacing: 0.02em; }
+        body.en .feature-card p { font-family: 'Outfit', sans-serif; font-size: 0.95rem; line-height: 1.65; }
+        body.en footer { font-family: 'Outfit', sans-serif; font-size: 0.9rem; }
+        body.en .neon-text-box { font-family: 'Outfit', sans-serif; font-size: clamp(0.85rem, 3vw, 1rem); letter-spacing: 0.01em; }
+        body.en .hero-cta-container { flex-direction: row; }
+        body.en .lang-btn { font-family: 'Outfit', sans-serif; }
+        body.en .welcome-char {
+            font-family: 'Celinda', sans-serif;
+            letter-spacing: 0.02em;
+        }
+        @media (max-width: 768px) {
+            body.en .navbar { flex-direction: column; }
+            body.en .hero-cta-container { flex-direction: column; }
+        }
+
+        .lang-btn-hero {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 20, 147, 0.45);
+            border-radius: 22px;
+            padding: 8px 20px;
+            color: #e0e0e0;
+            font-family: var(--font-fa);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.35s ease;
+            box-shadow: inset 0 2px 6px rgba(255,255,255,0.1),
+                        inset 0 -3px 8px rgba(255,20,147,0.25),
+                        0 0 0px rgba(255,20,147,0);
+            margin-bottom: 4px;
+            position: relative;
+            opacity: 0;
+            transform: translateY(-8px);
+            animation: labelDrop 0.7s cubic-bezier(0.25, 1, 0.5, 1) 0.5s forwards;
+            overflow: hidden;
+        }
+        .lang-btn-hero:hover {
+            color: #fff;
+            border-color: rgba(255, 20, 147, 0.9);
+            box-shadow: 0 0 18px rgba(255,20,147,0.45),
+                        inset 0 3px 8px rgba(255,255,255,0.2),
+                        inset 0 -3px 8px rgba(255,20,147,0.4);
+        }
+        .lang-btn-hero .lang-icon { font-size: 1.05rem; }
+        body.en .lang-btn-hero { font-family: var(--font-en); font-size: 0.95rem; }
+
+        .lang-tooltip-wrap {
+            position: fixed;
+            z-index: 99999;
+            top: 0; left: 0;
+            pointer-events: none;
+            opacity: 0;
+            animation: tooltipIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) 3.2s forwards;
+        }
+        .lang-tooltip-wrap.visible { pointer-events: auto; }
+
+        @keyframes tooltipIn {
+            to { opacity: 1; }
+        }
+
+        .lang-tooltip-box {
+            position: fixed;
+            background: rgba(10, 3, 8, 0.95);
+            border: 1px solid rgba(255, 20, 147, 0.6);
+            border-radius: 18px;
+            padding: 16px 20px 13px 20px;
+            min-width: 230px;
+            max-width: 270px;
+            text-align: center;
+            box-shadow:
+                0 0 30px rgba(255, 20, 147, 0.35),
+                0 8px 32px rgba(0, 0, 0, 0.8),
+                inset 0 1px 4px rgba(255,255,255,0.07);
+        }
+
+        .tooltip-arrow {
+            position: fixed;
+            width: 13px;
+            height: 13px;
+            background: rgba(10, 3, 8, 0.95);
+            border-top: 1px solid rgba(255, 20, 147, 0.6);
+            border-right: 1px solid rgba(255, 20, 147, 0.6);
+            transform: rotate(-45deg);
+        }
+
+        .tooltip-text {
+            font-size: 0.88rem;
+            color: rgba(230, 230, 230, 0.95);
+            line-height: 1.65;
+            margin: 0 0 11px 0;
+            text-shadow: 0 0 8px rgba(255,20,147,0.2);
+        }
+
+        .tooltip-close-btn {
+            display: inline-block;
+            background: rgba(255, 20, 147, 0.15);
+            border: 1px solid rgba(255, 20, 147, 0.5);
+            border-radius: 14px;
+            padding: 6px 22px;
+            color: #f0c0d8;
+            font-family: var(--font-fa);
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        body.en .tooltip-text {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.88rem;
+            direction: ltr;
+            text-align: center;
+        }
+        body.en .tooltip-close-btn {
+            font-family: 'Celinda', sans-serif;
+            font-size: 0.92rem;
+            letter-spacing: 0.04em;
+        }
+        body.en .lang-tooltip-box { direction: ltr; }
+        .tooltip-close-btn:hover {
+            background: rgba(255, 20, 147, 0.3);
+            border-color: rgba(255, 20, 147, 0.9);
+            color: #fff;
+            box-shadow: 0 0 12px rgba(255, 20, 147, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .tooltip-out {
+            animation: tooltipOut 0.28s ease forwards !important;
+        }
+        @keyframes tooltipOut {
+            to { opacity: 0; transform: translateY(-6px); }
+        }
     </style>
 </head>
 <body>
@@ -528,17 +700,21 @@
     <canvas id="neon-particle-canvas"></canvas>
 
     <nav class="navbar">
-        <div class="logo">گالری فاکسی 🦊</div>
+        <div class="logo" data-fa="گالری فاکسی 🦊" data-en="Foxy Gallery 🦊">گالری فاکسی 🦊</div>
         <ul>
-            <li><a href="#" class="glint-effect">خانه</a></li>
-            <li><a href="banner-youtube.html" class="glint-effect">گالری</a></li>
-            <li><a href="#" class="glint-effect">درباره ما</a></li>
+            <li><a href="index.html" class="glint-effect" data-fa="خانه" data-en="Home">خانه</a></li>
+            <li><a href="gallery-list.html" class="glint-effect" data-fa="گالری" data-en="Gallery">گالری</a></li>
+            <li><a href="#" class="glint-effect" data-fa="درباره ما" data-en="About">درباره ما</a></li>
         </ul>
     </nav>
 
     <header class="hero-section">
         <div class="welcome-hero">
-            <div class="welcome-label">— گالری فاکسی —</div>
+            <button class="lang-btn-hero glint-effect" id="langToggle" onclick="toggleLang()">
+                <span class="lang-icon">🌐</span>
+                <span id="langLabel">EN</span>
+                <span class="lang-text" data-fa="تغییر زبان" data-en="Switch to FA">تغییر زبان</span>
+            </button>
             <div class="welcome-chars">
                 <span class="welcome-char filled">W</span>
                 <span class="welcome-char filled">e</span>
@@ -552,13 +728,13 @@
         </div>
         
         <div class="hero-cta-container">
-            <a href="banner-youtube.html" class="hero-btn glint-effect"><span>تماشای گالری</span></a>
-            <a href="#" class="hero-btn glint-effect"><span>سفارش بنر</span></a>
+            <a href="gallery-list.html" class="hero-btn glint-effect"><span data-fa="تماشای گالری" data-en="View Gallery">تماشای گالری</span></a>
+            <a href="order-banner.html" class="hero-btn glint-effect"><span data-fa="سفارش بنر" data-en="Order a Banner">سفارش بنر</span></a>
         </div>
     </header>
 
     <main class="showcase-wrapper">
-        <h2 class="showcase-title">✨ طرح‌های پیشنهادی گالری فاکسی ✨</h2>
+        <h2 class="showcase-title" data-fa="✨ طرح‌های پیشنهادی گالری فاکسی ✨" data-en="✨ Featured Designs by Foxy Gallery ✨">✨ طرح‌های پیشنهادی گالری فاکسی ✨</h2>
         
         <section class="slider-section">
             <div class="nav-arrow prev" id="prevBtn">
@@ -591,8 +767,8 @@
             <svg class="neon-icon-svg" viewBox="0 0 24 24">
                 <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
             </svg>
-            <h3>دانلود سریع</h3>
-            <p>برای دانلود بدون محدودیت کلیک کنید</p>
+            <h3 data-fa="دانلود سریع" data-en="Fast Download">دانلود سریع</h3>
+            <p data-fa="برای دانلود بدون محدودیت کلیک کنید" data-en="Click to download with no restrictions">برای دانلود بدون محدودیت کلیک کنید</p>
         </div>
 
         <div class="feature-card glint-effect">
@@ -601,8 +777,8 @@
                 <path d="M11 3 3 9l9 12 9-12-8-6z"></path>
                 <path d="M2 9h20"></path>
             </svg>
-            <h3>کیفیت عالی</h3>
-            <p>تمام تصاویر با رزولوشن بالا و مناسب برای دسکتاپ و کارهای گرافیکی هستند.</p>
+            <h3 data-fa="کیفیت عالی" data-en="Premium Quality">کیفیت عالی</h3>
+            <p data-fa="تمام تصاویر با رزولوشن بالا و مناسب برای دسکتاپ و کارهای گرافیکی هستند." data-en="All images are high-resolution, perfect for desktop wallpapers and graphic work.">تمام تصاویر با رزولوشن بالا و مناسب برای دسکتاپ و کارهای گرافیکی هستند.</p>
         </div>
 
         <div class="feature-card glint-effect">
@@ -613,19 +789,16 @@
                 <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path>
                 <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path>
             </svg>
-            <h3>۱۰۰٪ رایگان</h3>
-            <p>استفاده از تمام عکس‌ها برای مصارف شخصی و تجاری کاملاً رایگان است.</p>
+            <h3 data-fa="۱۰۰٪ رایگان" data-en="100% Free">۱۰۰٪ رایگان</h3>
+            <p data-fa="استفاده از تمام عکس‌ها برای مصارف شخصی و تجاری کاملاً رایگان است." data-en="All images are completely free for personal and commercial use.">استفاده از تمام عکس‌ها برای مصارف شخصی و تجاری کاملاً رایگان است.</p>
         </div>
     </section>
 
     <footer>
-        <p class="neon-text-box">© ۲۰۲۶ طراحی شده برای تمرین کدنویسی وب. تمام حقوق محفوظ است.</p>
+        <p class="neon-text-box" data-fa="© ۲۰۲۶ طراحی شده برای تمرین کدنویسی وب. تمام حقوق محفوظ است." data-en="© 2026 Designed for web development practice. All rights reserved.">© ۲۰۲۶ طراحی شده برای تمرین کدنویسی وب. تمام حقوق محفوظ است.</p>
     </footer>
 
     <script>
-        // ==========================================================================
-        // رندر ذرات نئونی پس‌زمینه
-        // ==========================================================================
         const isMobile = window.innerWidth <= 768;
         const canvas = document.getElementById('neon-particle-canvas');
         const ctx = canvas.getContext('2d');
@@ -740,9 +913,6 @@
         }
         animate();
 
-        // ==========================================================================
-        // موتور اسلایدر سه بعدی کروی بهینه‌سازی شده درون باکس پیشنهادات
-        // ==========================================================================
         const items = Array.from(document.querySelectorAll('.slider-item'));
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
@@ -760,7 +930,6 @@
 
                 const absOffset = Math.abs(offset);
                 
-                // هندسه و فرمول چیدمان کروی سه بعدی ایده آل
                 const scale = absOffset === 0 ? 1.15 : 1 - (absOffset * 0.12);
                 const translateX = offset * (isMobile ? 80 : 150); 
                 const translateZ = -absOffset * 110; 
@@ -809,6 +978,87 @@
         });
 
         updateSphericalCarousel();
+
+        let isEnglish = false;
+
+        function applyLang(english) {
+            isEnglish = english;
+            const body = document.body;
+            if (isEnglish) {
+                body.classList.add('en');
+                document.documentElement.lang = 'en';
+                document.documentElement.dir = 'ltr';
+                document.getElementById('langLabel').textContent = 'FA';
+                document.title = 'Foxy Gallery | Home';
+            } else {
+                body.classList.remove('en');
+                document.documentElement.lang = 'fa';
+                document.documentElement.dir = 'rtl';
+                document.getElementById('langLabel').textContent = 'EN';
+                document.title = 'گالری فاکسی | خانه';
+            }
+            document.querySelectorAll('[data-fa][data-en]').forEach(el => {
+                el.textContent = isEnglish ? el.dataset.en : el.dataset.fa;
+            });
+        }
+
+        function toggleLang() {
+            applyLang(!isEnglish);
+            localStorage.setItem('foxyLang', isEnglish ? 'en' : 'fa');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const saved = localStorage.getItem('foxyLang');
+            if (saved === 'en') applyLang(true);
+        });
+
+        function positionTooltip() {
+            const btn = document.getElementById('langToggle');
+            const wrap = document.getElementById('langTooltip');
+            const box = wrap ? wrap.querySelector('.lang-tooltip-box') : null;
+            const arrow = wrap ? wrap.querySelector('.tooltip-arrow') : null;
+            if (!btn || !box) return;
+
+            const rect = btn.getBoundingClientRect();
+            const boxW = 250;
+            const arrowSize = 13;
+
+            const btnCenterX = rect.left + rect.width / 2;
+            let boxLeft = btnCenterX - boxW / 2;
+            boxLeft = Math.max(10, Math.min(boxLeft, window.innerWidth - boxW - 10));
+
+            box.style.top = (rect.bottom + 14) + 'px';
+            box.style.left = boxLeft + 'px';
+            box.style.width = boxW + 'px';
+
+            if (arrow) {
+                arrow.style.top = (rect.bottom + 14 - arrowSize / 2 - 1) + 'px';
+                arrow.style.left = (btnCenterX - arrowSize / 2) + 'px';
+            }
+
+            wrap.classList.add('visible');
+        }
+
+        window.addEventListener('load', () => {
+            setTimeout(positionTooltip, 100);
+        });
+        window.addEventListener('resize', positionTooltip);
+
+        function closeTooltip() {
+            const wrap = document.getElementById('langTooltip');
+            if (wrap) {
+                wrap.classList.add('tooltip-out');
+                setTimeout(() => wrap.remove(), 300);
+            }
+        }
     </script>
+    <div class="lang-tooltip-wrap" id="langTooltip">
+        <div class="lang-tooltip-box">
+            <p class="tooltip-text" data-fa="عزیزم خوش اومدی! 🦊 از این گزینه میتونی زبان سایتو عوض کنی" data-en="Hey, welcome! 🦊 You can switch the site language from this button">عزیزم خوش اومدی! 🦊 از این گزینه میتونی زبان سایتو عوض کنی</p>
+            <button class="tooltip-close-btn" onclick="closeTooltip()" data-fa="باشه!" data-en="Got it!">باشه!</button>
+        </div>
+        <div class="tooltip-arrow"></div>
+    </div>
+
 </body>
 </html>

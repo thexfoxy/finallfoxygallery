@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://i.postimg.cc/W3khzYwz/tails-prower-480px.png" type="image/x-icon">
+    <title data-fa="لیست گالری | فاکسی" data-en="Gallery List | Foxy">لیست گالری | فاکسی</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        @font-face {
+            font-family: 'IBM Plex Sans Arabic';
+            src: url('fonts/IBMPlexSansArabic-Bold.ttf') format('truetype');
+            font-weight: bold;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Celinda';
+            src: url('fonts/CelindaRegular-DY8ZD.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        :root {
+            --font-fa: 'IBM Plex Sans Arabic', sans-serif;
+            --font-en: 'Celinda', 'Outfit', sans-serif;
+        }
+
+        body {
+            font-family: var(--font-fa); background-color: #050505; color: #eee; 
+            margin: 0; padding: 0; display: flex; flex-direction: column;
+            min-height: 100vh; overflow-x: hidden;
+        }
+
+        .navbar {
+            position: fixed; top: 0; left: 0; width: 100%;
+            background: rgba(13, 13, 13, 0.85); backdrop-filter: blur(10px); 
+            -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255, 20, 147, 0.3); 
+            box-shadow: 0 4px 20px rgba(255, 20, 147, 0.15); 
+            display: flex; flex-direction: row-reverse; justify-content: space-between;
+            align-items: center; padding: 15px 50px; box-sizing: border-box; z-index: 1000; 
+        }
+        .navbar .logo { font-size: 1.4rem; font-weight: bold; color: #ff1493; text-shadow: 0 0 10px rgba(255, 20, 147, 0.6); }
+        .navbar ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: row-reverse; }
+        .navbar ul li { margin-left: 20px; }
+        .navbar ul li a { text-decoration: none; color: #eee; font-weight: bold; font-size: 0.95rem; transition: all 0.3s ease; padding: 5px 12px; border-radius: 10px; display: inline-block; }
+        .navbar ul li a:hover { color: #fff; background: rgba(255, 20, 147, 0.25); box-shadow: 0 0 10px rgba(255, 20, 147, 0.4); }
+
+        .glint-effect { position: relative; overflow: hidden; isolation: isolate; }
+        .glint-effect::after {
+            content: ""; position: absolute; top: 0; left: -150%; width: 60%; height: 100%;
+            background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 100%);
+            transform: skewX(-25deg); z-index: 5; pointer-events: none; opacity: 0; filter: blur(4px);
+        }
+        .glint-effect:hover::after { opacity: 1; animation: glintSweep 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+        @keyframes glintSweep { 0% { left: -150%; } 100% { left: 150%; } }
+
+        .gallery-box {
+            width: 95%; max-width: 900px; margin: 130px auto 50px auto;
+            background: rgba(15, 6, 12, 0.45); backdrop-filter: blur(16px); border-radius: 32px;
+            border: 1px solid rgba(255, 20, 147, 0.25); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            padding: 40px 20px; box-sizing: border-box; text-align: center;
+        }
+
+        .gallery-box h2 { margin-top: 0; margin-bottom: 40px; font-size: 1.5rem; color: #fff; text-shadow: 0 0 10px rgba(255, 20, 147, 0.5); }
+
+        .slider-wrap {
+            position: relative; width: 100%; height: clamp(230px, 35vh, 350px);
+            display: flex; justify-content: center; align-items: center; overflow: hidden;
+        }
+
+        .slider-track {
+            position: relative; width: 100%; height: 100%;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        .slide-item {
+            position: absolute; width: clamp(250px, 40vw, 450px); aspect-ratio: 16 / 9;
+            border-radius: 20px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.7);
+            border: 2px solid rgba(255, 20, 147, 0.2);
+            transition: all 0.6s cubic-bezier(0.25, 1, 0.3, 1);
+            cursor: pointer;
+        }
+
+        .slide-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .slide-item:hover { border-color: rgba(255, 20, 147, 0.9); box-shadow: 0 0 20px rgba(255, 20, 147, 0.5); transform: scale(1.03) !important; z-index: 50 !important; opacity: 1 !important; filter: none !important; }
+
+        body.en { font-family: var(--font-en); direction: ltr; }
+        body.en .navbar ul { flex-direction: row; }
+        body.en .navbar ul li { margin-left: 0; margin-right: 20px; }
+        body.en .navbar .logo { font-family: 'Celinda', sans-serif; }
+        body.en .navbar ul li a { font-family: 'Outfit', sans-serif; }
+        body.en .gallery-box h2 { font-family: 'Celinda', sans-serif; letter-spacing: 1px; }
+
+        @media (max-width: 768px) { .navbar { padding: 12px 20px; } .gallery-box { padding: 30px 10px; margin-top: 100px; } .slider-wrap { height: 200px; } }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo" data-fa="گالری فاکسی 🦊" data-en="Foxy Gallery 🦊">گالری فاکسی 🦊</div>
+        <ul>
+            <li><a href="index.html" class="glint-effect" data-fa="خانه" data-en="Home">خانه</a></li>
+            <li><a href="order-banner.html" class="glint-effect" data-fa="سفارش بنر" data-en="Order Banner">سفارش بنر</a></li>
+        </ul>
+    </nav>
+
+    <div class="gallery-box">
+        <h2 data-fa="ویترین گالری تصاویر" data-en="Artwork Showcase">ویترین گالری تصاویر</h2>
+        
+        <div class="slider-wrap">
+            <div class="slider-track" id="track">
+                <a href="banner-anime.html" class="slide-item"><img src="https://i.postimg.cc/3xcg7Z6n/photo-2026-06-04-17-30-12-jpg-202606041733.jpg" alt="Anime"></a>
+                <a href="banner-cyber-f.html" class="slide-item"><img src="https://i.postimg.cc/90b7kPZb/Gemini-Generated-Image-4ttudq4ttudq4ttu.png" alt="Cyber"></a>
+                <a href="banner-iran-f.html" class="slide-item"><img src="https://i.postimg.cc/mr9F4W7Z/Gemini-Generated-Image-ii3yqwii3yqwii3y.png" alt="Iran Fox"></a>
+                <a href="banner-youtube.html" class="slide-item"><img src="https://i.postimg.cc/kXNprn8Q/A-dark-themed-You-Tube-channel-202606041853.jpg" alt="YT Banner"></a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide-item');
+        let current = 0;
+
+        function renderSlider() {
+            slides.forEach((slide, index) => {
+                let offset = index - current;
+                if (offset < -1) offset += slides.length;
+                if (offset > 2) offset -= slides.length;
+
+                if (offset === 0) {
+                    slide.style.transform = "translateX(0) scale(1)";
+                    slide.style.zIndex = 10; slide.style.opacity = 1; slide.style.filter = "none";
+                } else if (offset === 1 || offset === -3) {
+                    slide.style.transform = "translateX(50%) scale(0.8)";
+                    slide.style.zIndex = 5; slide.style.opacity = 0.6; slide.style.filter = "blur(3px)";
+                } else if (offset === -1 || offset === 3) {
+                    slide.style.transform = "translateX(-50%) scale(0.8)";
+                    slide.style.zIndex = 5; slide.style.opacity = 0.6; slide.style.filter = "blur(3px)";
+                } else {
+                    slide.style.transform = "translateX(0) scale(0.5)";
+                    slide.style.zIndex = 1; slide.style.opacity = 0;
+                }
+            });
+        }
+
+        setInterval(() => { current = (current + 1) % slides.length; renderSlider(); }, 3000);
+        renderSlider();
+
+        (function applyStoredLang() {
+            const lang = localStorage.getItem('foxyLang');
+            if (lang === 'en') {
+                document.body.classList.add('en');
+                document.documentElement.lang = 'en';
+                document.documentElement.dir = 'ltr';
+                document.querySelectorAll('[data-fa][data-en]').forEach(el => { el.textContent = el.dataset.en; });
+                const titleEl = document.querySelector('title');
+                if (titleEl) titleEl.textContent = titleEl.dataset.en;
+            }
+        })();
+    </script>
+</body>
+</html>

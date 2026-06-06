@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="https://i.postimg.cc/W3khzYwz/tails-prower-480px.png" type="image/x-icon">
-    <title>بنر یوتیوب | گالری فاکسی</title>
+    <title data-fa="لوگو یوتیوب | طرح سایبر پانکی" data-en="Cyberpunk Logo | Foxy Gallery">لوگو یوتیوب | طرح سایبر پانکی</title>
 
     <style>
         /* تعریف فونت جدید IBM Plex Sans Arabic Bold برای صفحه بنر */
@@ -493,6 +493,41 @@
                 padding: 20px;
             }
         }
+
+        /* ==========================================================================
+           فونت‌های انگلیسی
+           ========================================================================== */
+        @font-face {
+            font-family: 'Celinda';
+            src: url('fonts/CelindaRegular-DY8ZD.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&display=swap');
+
+        /* ==========================================================================
+           حالت انگلیسی
+           ========================================================================== */
+        body.en {
+            font-family: 'Outfit', sans-serif;
+            direction: ltr;
+        }
+        body.en .navbar { flex-direction: row; }
+        body.en .navbar ul { flex-direction: row; }
+        body.en .navbar ul li { margin-left: 0; margin-right: 20px; }
+        body.en .navbar .logo { font-family: 'Celinda', sans-serif; font-size: 1.4rem; }
+        body.en .navbar ul li a { font-family: 'Outfit', sans-serif; }
+        body.en .header-section h1 { font-family: 'Outfit', sans-serif; font-size: clamp(1rem, 3vw, 1.3rem); }
+        body.en .header-section p  { font-family: 'Outfit', sans-serif; }
+        body.en .download-section h2 { font-family: 'Celinda', sans-serif; font-size: clamp(1.2rem, 3vw, 1.7rem); }
+        body.en .download-btn span  { font-family: 'Outfit', sans-serif; font-size: 1rem; }
+        body.en .image-details      { font-family: 'Outfit', sans-serif; font-size: 0.88rem; }
+        body.en .category-title     { font-family: 'Celinda', sans-serif; font-size: 1rem; }
+        body.en .category-item span { font-family: 'Outfit', sans-serif; }
+        body.en .feature-card h3    { font-family: 'Celinda', sans-serif; }
+        body.en .feature-card p     { font-family: 'Outfit', sans-serif; font-size: 0.95rem; line-height: 1.65; }
+        body.en footer              { font-family: 'Outfit', sans-serif; }
+        body.en .neon-text-box      { font-family: 'Outfit', sans-serif; }
     </style>
 </head>
 <body>
@@ -500,21 +535,21 @@
     <canvas id="neon-particle-canvas"></canvas>
 
     <nav class="navbar">
-        <div class="logo">گالری فاکسی 🦊</div>
+        <div class="logo"><span data-fa="گالری فاکسی 🦊" data-en="Foxy Gallery 🦊">گالری فاکسی 🦊</span></div>
         <ul>
-            <li><a href="index.html" class="glint-effect">خانه</a></li>
-            <li><a href="#" class="glint-effect">گالری</a></li>
-            <li><a href="#" class="glint-effect">درباره ما</a></li>
+            <li><a href="index.html" class="glint-effect"><span data-fa="خانه" data-en="Home">خانه</span></a></li>
+            <li><a href="#" class="glint-effect"><span data-fa="گالری" data-en="Gallery">گالری</span></a></li>
+            <li><a href="#" class="glint-effect"><span data-fa="درباره ما" data-en="About">درباره ما</span></a></li>
         </ul>
     </nav>
 
     <header class="header-section">
-        <h1 class="neon-text-box">بفرما ، اینم بنر مورد نظرت قربونت بروم 🙌</h1>
-        <p class="neon-text-box">بنر یوتیوب : مدل دیپ فانک</p>
+        <h1 class="neon-text-box"><span data-fa="بفرما ، اینم لوگو مورد نظرت قربونت بروم 🙌" data-en="Here's the logo you were looking for! 🙌">بفرما ، اینم لوگو مورد نظرت قربونت بروم 🙌</span></h1>
+        <p class="neon-text-box"><span data-fa="لوگو یوتیوب : طرح سایبر پانکی" data-en="YouTube Logo : Cyberpunk Style">لوگو یوتیوب : طرح سایبر پانکی</span></p>
     </header>
 
     <main class="download-section">
-        <h2 class="neon-text-box">بنر یوتیوب فانک ادیشن</h2>
+        <h2 class="neon-text-box"><span data-fa="لوگو یوتیوب | سایبر پانکی" data-en="YouTube Logo | Cyberpunk">لوگو یوتیوب | سایبر پانکی</span></h2>
         
         <div class="main-content-wrapper">
             
@@ -527,21 +562,21 @@
                 </div>
 
                 <a class="download-btn glint-effect" href="https://i.postimg.cc/90b7kPZb/Gemini-Generated-Image-4ttudq4ttudq4ttu.png" download="wallpaper.jpg">
-                    <span>دانلود رایگان تصویر</span>
+                    <span><span data-fa="دانلود رایگان تصویر" data-en="Free Download">دانلود رایگان تصویر</span></span>
                 </a>
             </div>
 
             <div class="category-container" id="category-box">
                 <canvas id="category-particle-canvas" class="box-canvas"></canvas>
 
-                <div class="category-title neon-text-box">دسته‌بندی‌های پیشنهادی یوتیوب</div>
+                <div class="category-title neon-text-box"><span data-fa="دسته‌بندی‌های پیشنهادی یوتیوب" data-en="Suggested Categories">دسته‌بندی‌های پیشنهادی یوتیوب</span></div>
                 <div class="category-grid">
-                    <div class="category-item glint-effect"><span>بنر یوتیوب</span></div>
-                    <div class="category-item glint-effect"><span>لوگو یوتیوب</span></div>
-                    <div class="category-item glint-effect"><span>اینترو موشن</span></div>
-                    <div class="category-item glint-effect"><span>کاور ویدیو (تامبنیل)</span></div>
-                    <div class="category-item glint-effect"><span>اوتپوت یوتیوب</span></div>
-                    <div class="category-item glint-effect"><span>والپیپر گیمینگ</span></div>
+                    <div class="category-item glint-effect"><span><span data-fa="بنر یوتیوب" data-en="YouTube Banner">بنر یوتیوب</span></span></div>
+                    <div class="category-item glint-effect"><span><span data-fa="لوگو یوتیوب" data-en="YouTube Logo">لوگو یوتیوب</span></span></div>
+                    <div class="category-item glint-effect"><span><span data-fa="اینترو موشن" data-en="Motion Intro">اینترو موشن</span></span></div>
+                    <div class="category-item glint-effect"><span><span data-fa="کاور ویدیو (تامبنیل)" data-en="Video Thumbnail">کاور ویدیو (تامبنیل)</span></span></div>
+                    <div class="category-item glint-effect"><span><span data-fa="اوتپوت یوتیوب" data-en="YouTube Outro">اوتپوت یوتیوب</span></span></div>
+                    <div class="category-item glint-effect"><span><span data-fa="والپیپر گیمینگ" data-en="Gaming Wallpaper">والپیپر گیمینگ</span></span></div>
                 </div>
             </div>
 
@@ -553,8 +588,8 @@
             <svg class="neon-icon-svg" viewBox="0 0 24 24">
                 <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
             </svg>
-            <h3>دانلود سریع</h3>
-            <p>برای دانلود بدون محدودیت کلیک کنید</p>
+            <h3><span data-fa="دانلود سریع" data-en="Fast Download">دانلود سریع</span></h3>
+            <p><span data-fa="برای دانلود بدون محدودیت کلیک کنید" data-en="Click to download with no restrictions">برای دانلود بدون محدودیت کلیک کنید</span></p>
         </div>
 
         <div class="feature-card glint-effect">
@@ -563,8 +598,8 @@
                 <path d="M11 3 3 9l9 12 9-12-8-6z"></path>
                 <path d="M2 9h20"></path>
             </svg>
-            <h3>کیفیت عالی</h3>
-            <p>تمام تصاویر با رزولوشن بالا و مناسب برای دسکتاپ و کارهای گرافیکی هستند.</p>
+            <h3><span data-fa="کیفیت عالی" data-en="Premium Quality">کیفیت عالی</span></h3>
+            <p><span data-fa="تمام تصاویر با رزولوشن بالا و مناسب برای دسکتاپ و کارهای گرافیکی هستند." data-en="All images are high-resolution, perfect for desktop wallpapers and graphic work.">تمام تصاویر با رزولوشن بالا و مناسب برای دسکتاپ و کارهای گرافیکی هستند.</span></p>
         </div>
 
         <div class="feature-card glint-effect">
@@ -575,13 +610,13 @@
                 <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path>
                 <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path>
             </svg>
-            <h3>۱۰۰٪ رایگان</h3>
-            <p>استفاده از تمام عکس‌ها برای مصارف شخصی و تجاری کاملاً رایگان است.</p>
+            <h3><span data-fa="۱۰۰٪ رایگان" data-en="100% Free">۱۰۰٪ رایگان</span></h3>
+            <p><span data-fa="استفاده از تمام عکس‌ها برای مصارف شخصی و تجاری کاملاً رایگان است." data-en="All images are completely free for personal and commercial use.">استفاده از تمام عکس‌ها برای مصارف شخصی و تجاری کاملاً رایگان است.</span></p>
         </div>
     </section>
 
     <footer>
-        <p class="neon-text-box">© ۲۰۲۶ طراحی شده برای تمرین کدنویسی وب. تمام حقوق محفوظ است.</p>
+        <p class="neon-text-box"><span data-fa="© ۲۰۲۶ طراحی شده برای تمرین کدنویسی وب. تمام حقوق محفوظ است." data-en="© 2026 Designed for web development practice. All rights reserved.">© ۲۰۲۶ طراحی شده برای تمرین کدنویسی وب. تمام حقوق محفوظ است.</span></p>
     </footer>
 
     <script>
@@ -958,6 +993,26 @@
         
         setTimeout(resizeBoxCanvases, 100);
         animate();
+        // ==========================================================================
+        // سیستم زبان — خواندن از localStorage
+        // ==========================================================================
+        (function applyStoredLang() {
+            const lang = localStorage.getItem('foxyLang');
+            if (lang !== 'en') return;
+
+            document.body.classList.add('en');
+            document.documentElement.lang = 'en';
+            document.documentElement.dir = 'ltr';
+
+            document.querySelectorAll('[data-fa][data-en]').forEach(el => {
+                el.textContent = el.dataset.en;
+            });
+
+            // آپدیت عنوان تب
+            const titleEl = document.querySelector('title[data-en]');
+            if (titleEl) document.title = titleEl.dataset.en;
+        })();
+
     </script>
 
 </body>
